@@ -1,0 +1,9 @@
+{
+  "apiFQDN": "qa22d-api.elateral-qa.io",
+  "accountFQDN": "qa22d-accounts.elateral-qa.io",
+  "webAppFQDN": "pgauto22f2.elateral-qa.io",
+  "adminUser": {
+    "name": "QAAutoAdmin",
+    "password": "test123"
+  }
+}
