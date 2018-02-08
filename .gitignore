@@ -57,3 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
+report
+coverage
+src/resources/not_tested
