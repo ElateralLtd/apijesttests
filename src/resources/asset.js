@@ -84,6 +84,7 @@ export function getAssetRefVersionVersion(options) {
   REQUEST.uri = '/asset/{ref}/version/{version}';
   if (options.ref) {
     REQUEST.uri = REQUEST.uri.replace('{ref}', options.ref);
+    REQUEST.uri = REQUEST.uri.replace('{version}', options.version);
   }
   return getRequest(
     { ...REQUEST, headers, qs: options.queryString })
