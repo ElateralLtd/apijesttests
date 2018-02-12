@@ -12,7 +12,7 @@ import { getMe } from '../src/resources/me';
 import config from '../config';
 import { getMetadataItem } from '../src/support/helper';
 import initiative from '../src/payloads/initiative';
-import assetPayLoad from '../src/payloads/asset';
+import assetPayLoad from '../src/payloads/assetPayload';
 import { createAsset, getAssetRef, modifyAssetRef, deleteAssetRef } from '../src/resources/asset';
 
 import { matchers } from 'jest-json-schema';
@@ -140,7 +140,7 @@ describe('/initiatives', () => {
     const options = { token: Test.access_token };
     testAsset.metadata = testInitiative.metadata;
     testAsset.metadata.push(getMetadataItem(Test.metadata, 'artwork-type', testAsset.artworkType).ref);
-    options.body = assetPayLoad.createFromTemplate(testAsset.name, testAsset.description, Test.initRef, testAsset.metadata);
+    options.body = assetPayLoad.assetForInitiative(testAsset.name, testAsset.description, Test.initRef, testAsset.metadata);
     return createAsset(options)
       .then(response => {
         expect(response).toEqual(expect.anything());
@@ -194,7 +194,7 @@ describe('/initiatives', () => {
     images.preview.ref = Test.resources.find(i => i.filename === images.preview.filename).ref;
 
     const body = assetPayLoad
-      .createFromTemplate(`${testAsset.name} modified`, `${testAsset.description} modified`, Test.initRef, testAsset.metadata);
+      .assetForInitiative(`${testAsset.name} modified`, `${testAsset.description} modified`, Test.initRef, testAsset.metadata);
     body.images = images;
     Test.images = images;
     body.updatedAt = Test.asset.updatedAt;
