@@ -1,20 +1,12 @@
 import path from 'path';
 const fs = require('fs');
-import { API_URL, postRequest, getRequest, buildAuthHeader } from '../shared';
 import { fileHeader, getMethod, postMethod, putMethod, deleteMethod } from './codeSnippets';
+import { getSwaggerJson } from '../getSwaggerJson';
 
 function getFilesInFolder(folder) {
   return fs.readdirSync(folder)
     .filter(file => file.endsWith('.js'))
     .map(file => file.replace('.js', ''));
-}
-
-const REQUEST = { baseUrl: API_URL, uri: '/api-docs', json: true };
-
-function getSwaggerJson() {
-  return getRequest(
-    { ...REQUEST })
-    .then(response => response);
 }
 
 function createFunctionName(resourcePath, method) {
