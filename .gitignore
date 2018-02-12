@@ -61,3 +61,4 @@ report
 coverage
 src/resources/not_tested
 lib
+.vscode/
