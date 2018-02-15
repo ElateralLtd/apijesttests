@@ -4,6 +4,8 @@
   "webAppFQDN": "pgauto22f2.elateral-qa.io",
   "adminUser": {
     "name": "QAAutoAdmin",
-    "password": "test123"
-  }
+    "password": "test123",
+    "email": "someEmail@elateral.com"
+  },
+  "jesBeforeAllTimeout": 20000
 }

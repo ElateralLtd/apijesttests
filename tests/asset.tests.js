@@ -65,6 +65,7 @@ describe('/assets', () => {
         images = response.body.results.filter(r => r.mimeType.includes('image/'));
       });
   }, 20000);
+  }, config.jesBeforeAllTimeout);
 
   test('Get assets with limits query', () => {
     const limit = 10;

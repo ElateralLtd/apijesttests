@@ -22,7 +22,7 @@ describe('/addresses', () => {
         Test.access_token = JSON.parse(response.body).access_token;
         expect(Test.access_token).toEqual(JSON.parse(response.body).access_token);
       });
-  }, 20000);
+  }, config.jesBeforeAllTimeout);
 
   test('Create address', () => {
     const timeStamp = Date.now();

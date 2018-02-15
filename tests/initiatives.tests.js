@@ -77,6 +77,7 @@ describe('/initiatives', () => {
         expect(Test.resources).toEqual(expect.anything());
       });
   }, 20000);
+  }, config.jesBeforeAllTimeout);
 
   test('Get initiatives', () => {
     const limit = 10;
