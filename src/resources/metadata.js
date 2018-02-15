@@ -13,9 +13,6 @@ export function getMetadata(options) {
 export function createMetadata(options) {
   const headers = buildAuthHeader(options.token);
   REQUEST.uri = '/metadata';
-  if (options.ref) {
-    REQUEST.uri = REQUEST.uri.replace('{ref}', options.ref);
-  }
   return postRequest(
     { ...REQUEST, headers, body: options.options })
     .then(response => response);
@@ -24,9 +21,7 @@ export function createMetadata(options) {
 export function getMetadataRef(options) {
   const headers = buildAuthHeader(options.token);
   REQUEST.uri = '/metadata/{ref}';
-  if (options.ref) {
-    REQUEST.uri = REQUEST.uri.replace('{ref}', options.ref);
-  }
+  REQUEST.uri = REQUEST.uri.replace('{ref}', options.ref);
   return getRequest(
     { ...REQUEST, headers, qs: options.queryString })
     .then(response => response);
@@ -35,9 +30,7 @@ export function getMetadataRef(options) {
 export function modifyMetadataRef(options) {
   const headers = buildAuthHeader(options.token);
   REQUEST.uri = '/metadata/{ref}';
-  if (options.ref) {
-    REQUEST.uri = REQUEST.uri.replace('{ref}', options.ref);
-  }
+  REQUEST.uri = REQUEST.uri.replace('{ref}', options.ref);
   return putRequest(
     { ...REQUEST, headers, body: options.body })
     .then(response => response);
@@ -46,9 +39,7 @@ export function modifyMetadataRef(options) {
 export function deleteMetadataRef(options) {
   const headers = buildAuthHeader(options.token);
   REQUEST.uri = '/metadata/{ref}';
-  if (options.ref) {
-    REQUEST.uri = REQUEST.uri.replace('{ref}', options.ref);
-  }
+  REQUEST.uri = REQUEST.uri.replace('{ref}', options.ref);
   return deleteRequest(
     { ...REQUEST, headers })
     .then(response => response);
