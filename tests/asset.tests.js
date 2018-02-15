@@ -32,11 +32,8 @@ describe('/assets', () => {
   beforeAll(() => {
     const user = config.adminUser.name;
     const password = config.adminUser.password;
-    return getSwaggerJson()
-      .then((response) => {
-        Test.asset.postResponseSchema = response.body.paths['/asset'].post.responses['201'].schema;
-        return createToken(user, password);
-      }).then(response => {
+    return createToken(user, password)
+      .then(response => {
         expect(response.statusCode).toBe(200);
         expect(response.body).toEqual(expect.anything());
         Test.access_token = JSON.parse(response.body).access_token;
@@ -63,8 +60,11 @@ describe('/assets', () => {
         expect(Test.resources).toEqual(expect.anything());
 
         images = response.body.results.filter(r => r.mimeType.includes('image/'));
+        return getSwaggerJson();
+      })
+      .then(response => {
+        Test.asset.postResponseSchema = response.body.paths['/asset'].post.responses['201'].schema;
       });
-  }, 20000);
   }, config.jesBeforeAllTimeout);
 
   test('Get assets with limits query', () => {

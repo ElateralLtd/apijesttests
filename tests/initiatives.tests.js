@@ -16,30 +16,28 @@ import assetPayLoad from '../src/payloads/assetPayload';
 import { createAsset, getAssetRef, modifyAssetRef, deleteAssetRef } from '../src/resources/asset';
 
 import { matchers } from 'jest-json-schema';
+import { getSwaggerJson } from '../src/getSwaggerJson';
 expect.extend(matchers);
 
-const user = config.adminUser.name;
-const password = config.adminUser.password;
-const Test = {};
+const Test = {
+  asset: {
+    name: 'QAAuto API Asset',
+    description: 'Asset for initiative',
+    artworkType: 'Poster',
+    metadata: [],
+  },
+  initiative: {
+    name: 'QAAuto API test',
+    description: 'Initiative without asset',
+    location: 'UK',
+    brand: 'Ariel',
+    metadata: [],
+  },
+};
 const images = {
   banner: { filename: 'initiative_banner.bmp' },
   thumbnail: { filename: 'initiative_thumbnail.jpg' },
   preview: { filename: 'initiative_preview.gif' },
-};
-
-const testInitiative = {
-  name: 'QAAuto API test',
-  description: 'Initiative without asset',
-  location: 'UK',
-  brand: 'Ariel',
-  metadata: [],
-};
-
-const testAsset = {
-  name: 'QAAuto API Asset',
-  description: 'Asset for initiative',
-  artworkType: 'Poster',
-  metadata: [],
 };
 
 const initiativesSchema = {
@@ -49,6 +47,8 @@ const initiativesSchema = {
 
 describe('/initiatives', () => {
   beforeAll(() => {
+    const user = config.adminUser.name;
+    const password = config.adminUser.password;
     return createToken(user, password)
       .then(response => {
         expect(response.statusCode).toBe(200);
@@ -75,8 +75,12 @@ describe('/initiatives', () => {
         expect(response.body).toEqual(expect.anything());
         Test.resources = response.body.results;
         expect(Test.resources).toEqual(expect.anything());
+
+        return getSwaggerJson();
+      })
+      .then(response => {
+        Test.initiative.postResponseSchema = response.body.paths['/initiatives'].post.responses['201'].schema;
       });
-  }, 20000);
   }, config.jesBeforeAllTimeout);
 
   test('Get initiatives', () => {
@@ -92,15 +96,15 @@ describe('/initiatives', () => {
   });
 
   test('Create initiative', () => {
-    testInitiative.metadata.push(getMetadataItem(Test.metadata, 'location', testInitiative.location).ref);
-    testInitiative.metadata.push(getMetadataItem(Test.metadata, 'brand', testInitiative.brand).ref);
+    Test.initiative.metadata.push(getMetadataItem(Test.metadata, 'location', Test.initiative.location).ref);
+    Test.initiative.metadata.push(getMetadataItem(Test.metadata, 'brand', Test.initiative.brand).ref);
     const options = { token: Test.access_token };
     options.body = initiative
       .createFromTemplate(
-      testInitiative.name,
-      testInitiative.description,
-      Test.me.account.ref,
-      testInitiative.metadata);
+        Test.initiative.name,
+        Test.initiative.description,
+        Test.me.account.ref,
+        Test.initiative.metadata);
 
     return createInitiatives(options)
       .then(response => {
@@ -115,11 +119,11 @@ describe('/initiatives', () => {
         expect(response.body.ref).toEqual(expect.anything());
         expect(response.body.briefImages).toEqual([]);
         expect(response.body.briefConfigs).toEqual([]);
-        expect(response.body.name).toBe(testInitiative.name);
-        expect(response.body.description).toBe(testInitiative.description);
+        expect(response.body.name).toBe(Test.initiative.name);
+        expect(response.body.description).toBe(Test.initiative.description);
         expect(response.body.account).toBe(Test.me.account.ref);
-        expect(response.body.metadata).toEqual(testInitiative.metadata);
-        expect(response.body).toMatchSchema(initiativesSchema);
+        expect(response.body.metadata).toEqual(Test.initiative.metadata);
+        expect(response.body).toMatchSchema(Test.initiative.postResponseSchema);
         Test.initRef = response.body.ref;
       });
   });
@@ -131,17 +135,17 @@ describe('/initiatives', () => {
       .then(response => {
         expect(response).toEqual(expect.anything());
         expect(response.statusCode).toBe(200);
-        expect(response.body.name).toBe(testInitiative.name);
-        expect(response.body.description).toBe(testInitiative.description);
+        expect(response.body.name).toBe(Test.initiative.name);
+        expect(response.body.description).toBe(Test.initiative.description);
         expect(response.body.account).toBe(Test.me.account.ref);
       });
   });
 
   test('Create asset for initiative by ref', () => {
     const options = { token: Test.access_token };
-    testAsset.metadata = testInitiative.metadata;
-    testAsset.metadata.push(getMetadataItem(Test.metadata, 'artwork-type', testAsset.artworkType).ref);
-    options.body = assetPayLoad.assetForInitiative(testAsset.name, testAsset.description, Test.initRef, testAsset.metadata);
+    Test.asset.metadata = Test.initiative.metadata;
+    Test.asset.metadata.push(getMetadataItem(Test.metadata, 'artwork-type', Test.asset.artworkType).ref);
+    options.body = assetPayLoad.assetForInitiative(Test.asset.name, Test.asset.description, Test.initRef, Test.asset.metadata);
     return createAsset(options)
       .then(response => {
         expect(response).toEqual(expect.anything());
@@ -156,10 +160,10 @@ describe('/initiatives', () => {
         expect(response.body.ref).toEqual(expect.anything());
         expect(response.body.collaborators.length).toBeGreaterThan(0);
         expect(response.body.versions).toEqual([]);
-        expect(response.body.name).toBe(testAsset.name);
-        expect(response.body.description).toBe(testAsset.description);
+        expect(response.body.name).toBe(Test.asset.name);
+        expect(response.body.description).toBe(Test.asset.description);
         expect(response.body.account).toBe(Test.me.account.ref);
-        expect(response.body.metadata).toEqual(testAsset.metadata);
+        expect(response.body.metadata).toEqual(Test.asset.metadata);
         Test.assetRef = response.body.ref;
       });
   });
@@ -181,10 +185,10 @@ describe('/initiatives', () => {
         expect(response.body.ref).toEqual(expect.anything());
         expect(response.body.collaborators.length).toBeGreaterThan(0);
         expect(response.body.versions).toEqual([]);
-        expect(response.body.name).toBe(testAsset.name);
-        expect(response.body.description).toBe(testAsset.description);
+        expect(response.body.name).toBe(Test.asset.name);
+        expect(response.body.description).toBe(Test.asset.description);
         expect(response.body.account).toBe(Test.me.account.ref);
-        expect(response.body.metadata).toEqual(testAsset.metadata);
+        expect(response.body.metadata).toEqual(Test.asset.metadata);
         Test.asset = response.body;
       });
   });
@@ -195,7 +199,7 @@ describe('/initiatives', () => {
     images.preview.ref = Test.resources.find(i => i.filename === images.preview.filename).ref;
 
     const body = assetPayLoad
-      .assetForInitiative(`${testAsset.name} modified`, `${testAsset.description} modified`, Test.initRef, testAsset.metadata);
+      .assetForInitiative(`${Test.asset.name} modified`, `${Test.asset.description} modified`, Test.initRef, Test.asset.metadata);
     body.images = images;
     Test.images = images;
     body.updatedAt = Test.asset.updatedAt;
@@ -208,10 +212,10 @@ describe('/initiatives', () => {
       .then(response => {
         expect(response).toEqual(expect.anything());
         expect(response.statusCode).toBe(200);
-        expect(response.body.name).toBe(`${testAsset.name} modified`);
-        expect(response.body.description).toBe(`${testAsset.description} modified`);
+        expect(response.body.name).toBe(`${Test.asset.name} modified`);
+        expect(response.body.description).toBe(`${Test.asset.description} modified`);
         expect(response.body.account).toBe(Test.me.account.ref);
-        expect(response.body.metadata).toEqual(testAsset.metadata);
+        expect(response.body.metadata).toEqual(Test.asset.metadata);
         expect(response.body.updatedAt).toEqual(expect.anything());
         expect(response.body.createdAt).toEqual(expect.anything());
         expect(response.body.createdBy).toEqual(expect.anything());
@@ -233,7 +237,7 @@ describe('/initiatives', () => {
         expect(response).toEqual(expect.anything());
         expect(response.statusCode).toBe(200);
         expect(response.body.account).toBe(Test.me.account.ref);
-        expect(response.body.metadata).toEqual(testAsset.metadata);
+        expect(response.body.metadata).toEqual(Test.asset.metadata);
         expect(response.body.images.preview).toEqual(Test.images.preview.ref);
         expect(response.body.images.banner).toEqual(Test.images.banner.ref);
         expect(response.body.images.thumbnail).toEqual(Test.images.thumbnail.ref);
