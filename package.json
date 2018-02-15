@@ -4,12 +4,12 @@
   "description": "API Regression Tests by Jest for Elateral.IO (PAT) Product's API",
   "main": "index.js",
   "scripts": {
-    "pretest": "npm run prepare && node lib/index.js",
+    "pretest": "npm run clean && npm run lint",
     "test": "jest",
-    "prepare": "npm run clean && npm run transpile-es2015",
     "clean": "del-cli lib src/resources/not_tested report log coverage",
-    "transpile-es2015": "npm run lint && babel src -d lib",
-    "lint": "eslint tests/**/*.js src/**/*.js"
+    "transpile-es2015": "babel src -d lib",
+    "lint": "eslint tests/**/*.js src/**/*.js",
+    "generateCode": "node lib/index.js"
   },
   "author": "Mikhail Amurov",
   "license": "ISC",
