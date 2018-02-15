@@ -81,7 +81,7 @@ module.exports = {
             },
             {
               name: 'Fileupload',
-              condition: null,
+              condition: [],
             },
           ],
           fields: {
