@@ -6,8 +6,6 @@ import {
   modifyBriefRequestsBriefRequestItemsRef,
   getBriefRequestsBriefRequestItemsRef,
 } from '../src/resources/briefRequests';
-import { getSwaggerJson } from '../src/getSwaggerJson';
-import { getMetadataItem } from '../src/support/helper';
 import config from '../config';
 
 import { matchers } from 'jest-json-schema';
