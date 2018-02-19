@@ -7,5 +7,10 @@
     "password": "test123",
     "email": "someEmail@elateral.com"
   },
+  "accountsUser": {
+    "name": "QAAutoAccountsAdmin",
+    "password": "test123",
+    "email": "someEmail@elateral.com"
+  },
   "jesBeforeAllTimeout": 20000
 }
