@@ -25,6 +25,11 @@ const Test = {
     description: 'Initiative for Brief Test',
     location: 'UK',
     brand: 'Ariel',
+    customer: 'None',
+    distributor: 'None',
+    'content-type': 'POSM',
+    'attribute-2': 'N/A',
+    'attribute-3': 'N/A',
     metadata: [],
   },
   artwork: { name: 'Poster' },
@@ -46,13 +51,16 @@ describe('/briefs', () => {
       .then(response => {
         expect(response.statusCode).toBe(200);
         expect(response.body).toEqual(expect.anything());
-        Test.metadata = response.body.results;
-        const { name, ref, properties } = getMetadataItem(Test.metadata, 'location', Test.initiative.location);
+        const { name, ref, properties } = getMetadataItem(response.body.results, 'location', Test.initiative.location);
         Test.brief.location = { name, ref, properties };
-
-        Test.initiative.metadata.push(getMetadataItem(Test.metadata, 'location', Test.initiative.location).ref);
-        Test.initiative.metadata.push(getMetadataItem(Test.metadata, 'brand', Test.initiative.brand).ref);
-        Test.artwork.ref = getMetadataItem(Test.metadata, 'artwork-type', Test.artwork.name).ref;
+        Test.initiative.metadata.push(getMetadataItem(response.body.results, 'location', Test.initiative.location).ref);
+        Test.initiative.metadata.push(getMetadataItem(response.body.results, 'brand', Test.initiative.brand).ref);
+        Test.initiative.metadata.push(getMetadataItem(response.body.results, 'customer', Test.initiative.customer).ref);
+        Test.initiative.metadata.push(getMetadataItem(response.body.results, 'distributor', Test.initiative.distributor).ref);
+        Test.initiative.metadata.push(getMetadataItem(response.body.results, 'content-type', Test.initiative['content-type']).ref);
+        Test.initiative.metadata.push(getMetadataItem(response.body.results, 'attribute-2', Test.initiative['attribute-2']).ref);
+        Test.initiative.metadata.push(getMetadataItem(response.body.results, 'attribute-3', Test.initiative['attribute-3']).ref);
+        Test.artwork.ref = getMetadataItem(response.body.results, 'artwork-type', Test.artwork.name).ref;
         const options = { token: Test.access_token, queryString: { limit: 100 } };
         return getResources(options);
       })

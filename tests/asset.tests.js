@@ -25,6 +25,11 @@ Test.asset = {
   artworkType: 'Poster',
   location: 'UK',
   brand: 'Ariel',
+  customer: 'None',
+  distributor: 'None',
+  'content-type': 'POSM',
+  'attribute-2': 'N/A',
+  'attribute-3': 'N/A',
   metadata: [],
 };
 
@@ -43,7 +48,14 @@ describe('/assets', () => {
       .then(response => {
         expect(response.statusCode).toBe(200);
         expect(response.body).toEqual(expect.anything());
-        Test.metadata = response.body.results;
+        Test.asset.metadata.push(getMetadataItem(response.body.results, 'location', Test.asset.location).ref);
+        Test.asset.metadata.push(getMetadataItem(response.body.results, 'brand', Test.asset.brand).ref);
+        Test.asset.metadata.push(getMetadataItem(response.body.results, 'artwork-type', Test.asset.artworkType).ref);
+        Test.asset.metadata.push(getMetadataItem(response.body.results, 'customer', Test.asset.customer).ref);
+        Test.asset.metadata.push(getMetadataItem(response.body.results, 'distributor', Test.asset.distributor).ref);
+        Test.asset.metadata.push(getMetadataItem(response.body.results, 'content-type', Test.asset['content-type']).ref);
+        Test.asset.metadata.push(getMetadataItem(response.body.results, 'attribute-2', Test.asset['attribute-2']).ref);
+        Test.asset.metadata.push(getMetadataItem(response.body.results, 'attribute-3', Test.asset['attribute-3']).ref);
         return getMe({ token: Test.access_token });
       })
       .then(response => {
@@ -82,10 +94,6 @@ describe('/assets', () => {
   });
 
   test('Create asset for initiative by ref', () => {
-    Test.asset.metadata.push(getMetadataItem(Test.metadata, 'location', Test.asset.location).ref);
-    Test.asset.metadata.push(getMetadataItem(Test.metadata, 'brand', Test.asset.brand).ref);
-    Test.asset.metadata.push(getMetadataItem(Test.metadata, 'artwork-type', Test.asset.artworkType).ref);
-
     const options = { token: Test.access_token };
     options.body = assetPayLoad.assetOrphan(
       Test.asset.name,
