@@ -12,6 +12,7 @@ export function getCarts(options) {
 
 export function createCarts(options) {
   const headers = buildAuthHeader(options.token);
+  headers['Content-Type'] = 'application/json';
   REQUEST.uri = '/carts';
   return postRequest(
     { ...REQUEST, headers, body: options.body })
@@ -57,7 +58,7 @@ export function createCartsCartItems(options) {
 export function getCartsCartValidate(options) {
   const headers = buildAuthHeader(options.token);
   REQUEST.uri = '/carts/{cart}/validate';
-  REQUEST.uri = REQUEST.uri.replace('{ref}', options.ref);
+  REQUEST.uri = REQUEST.uri.replace('{cart}', options.ref);
   return getRequest(
     { ...REQUEST, headers, qs: options.queryString })
     .then(response => response);
