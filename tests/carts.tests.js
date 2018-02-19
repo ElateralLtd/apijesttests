@@ -8,7 +8,6 @@ import {
   deleteCartsRef,
 } from '../src/resources/carts';
 import config from '../config';
-import assetPayLoad from '../src/payloads/assetPayload';
 
 import { matchers } from 'jest-json-schema';
 expect.extend(matchers);
