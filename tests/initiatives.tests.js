@@ -6,6 +6,7 @@ import {
   getInitiatives,
   createInitiatives,
   getInitiativesRef,
+  modifyInitiativesRef,
   deleteInitiativesRef,
 } from '../src/resources/initiatives';
 import { getMe } from '../src/resources/me';
@@ -31,6 +32,11 @@ const Test = {
     description: 'Initiative without asset',
     location: 'UK',
     brand: 'Ariel',
+    customer: 'None',
+    distributor: 'None',
+    'content-type': 'POSM',
+    'attribute-2': 'N/A',
+    'attribute-3': 'N/A',
     metadata: [],
   },
 };
@@ -60,7 +66,14 @@ describe('/initiatives', () => {
       .then(response => {
         expect(response.statusCode).toBe(200);
         expect(response.body).toEqual(expect.anything());
-        Test.metadata = response.body.results;
+        Test.initiative.metadata.push(getMetadataItem(response.body.results, 'location', Test.initiative.location).ref);
+        Test.initiative.metadata.push(getMetadataItem(response.body.results, 'brand', Test.initiative.brand).ref);
+        Test.initiative.metadata.push(getMetadataItem(response.body.results, 'customer', Test.initiative.customer).ref);
+        Test.initiative.metadata.push(getMetadataItem(response.body.results, 'distributor', Test.initiative.distributor).ref);
+        Test.initiative.metadata.push(getMetadataItem(response.body.results, 'content-type', Test.initiative['content-type']).ref);
+        Test.initiative.metadata.push(getMetadataItem(response.body.results, 'attribute-2', Test.initiative['attribute-2']).ref);
+        Test.initiative.metadata.push(getMetadataItem(response.body.results, 'attribute-3', Test.initiative['attribute-3']).ref);
+        Test.asset.metadata.push(getMetadataItem(response.body.results, 'artwork-type', Test.asset.artworkType).ref);
         return getMe({ token: Test.access_token });
       })
       .then(response => {
@@ -96,15 +109,13 @@ describe('/initiatives', () => {
   });
 
   test('Create initiative', () => {
-    Test.initiative.metadata.push(getMetadataItem(Test.metadata, 'location', Test.initiative.location).ref);
-    Test.initiative.metadata.push(getMetadataItem(Test.metadata, 'brand', Test.initiative.brand).ref);
     const options = { token: Test.access_token };
     options.body = initiative
       .createFromTemplate(
-        Test.initiative.name,
-        Test.initiative.description,
-        Test.me.account.ref,
-        Test.initiative.metadata);
+      Test.initiative.name,
+      Test.initiative.description,
+      Test.me.account.ref,
+      Test.initiative.metadata);
 
     return createInitiatives(options)
       .then(response => {
@@ -138,13 +149,13 @@ describe('/initiatives', () => {
         expect(response.body.name).toBe(Test.initiative.name);
         expect(response.body.description).toBe(Test.initiative.description);
         expect(response.body.account).toBe(Test.me.account.ref);
+        Test.initiativeUpdatedAt = response.body.updatedAt;
       });
   });
 
   test('Create asset for initiative by ref', () => {
     const options = { token: Test.access_token };
     Test.asset.metadata = Test.initiative.metadata;
-    Test.asset.metadata.push(getMetadataItem(Test.metadata, 'artwork-type', Test.asset.artworkType).ref);
     options.body = assetPayLoad.assetForInitiative(Test.asset.name, Test.asset.description, Test.initRef, Test.asset.metadata);
     return createAsset(options)
       .then(response => {
@@ -242,6 +253,39 @@ describe('/initiatives', () => {
         expect(response.body.images.banner).toEqual(Test.images.banner.ref);
         expect(response.body.images.thumbnail).toEqual(Test.images.thumbnail.ref);
       });
+  });
+
+  test('Update Initiative', () => {
+    const options = { token: Test.access_token };
+    const body = initiative
+      .createFromTemplate(
+      `${Test.initiative.name} modified`,
+      `${Test.initiative.description} modified`,
+      Test.me.account.ref,
+      Test.initiative.metadata);
+    body.createdBy = '58aad6ab8431f8100019c1c9';
+    body.updatedAt = Test.initiativeUpdatedAt;
+    options.body = body;
+    options.ref = Test.initRef;
+    return modifyInitiativesRef(options)
+      .then(response => {
+        expect(response).toEqual(expect.anything());
+        expect(response.statusCode).toBe(200);
+        expect(response.body.name).toBe(`${Test.initiative.name} modified`);
+        expect(response.body.description).toBe(`${Test.initiative.description} modified`);
+        expect(response.body.updatedAt).toEqual(expect.anything());
+        expect(response.body.createdAt).toEqual(expect.anything());
+        expect(response.body.start).toEqual(expect.anything());
+        expect(response.body.end).toEqual(expect.anything());
+        expect(response.body.active).toEqual(expect.anything());
+        expect(response.body.activatedAt).toEqual(expect.anything());
+        expect(response.body.ref).toEqual(expect.anything());
+        expect(response.body.briefImages).toEqual([]);
+        expect(response.body.briefConfigs).toEqual([]);
+        expect(response.body.account).toBe(Test.me.account.ref);
+        expect(response.body.metadata).toEqual(Test.initiative.metadata);
+      }
+      );
   });
 
   test('Get briefConfig of initiative', () => {
