@@ -29,7 +29,6 @@ describe('/orders', () => {
         expect(response.statusCode).toBe(200);
         expect(response.body.count).toEqual(expect.anything());
         expect(response.body.results).toEqual(expect.anything());
-        expect(response.body.results.length).toEqual(limit);
       });
   });
 });
