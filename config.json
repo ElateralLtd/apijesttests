@@ -12,5 +12,10 @@
     "password": "test123",
     "email": "someEmail@elateral.com"
   },
+  "agencyUser": {
+    "name": "QAAutoAgencyNFZ",
+    "password": "test123",
+    "email": "someEmail@elateral.com"
+  },
   "jesBeforeAllTimeout": 20000
 }
