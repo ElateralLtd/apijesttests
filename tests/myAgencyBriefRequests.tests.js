@@ -1,11 +1,5 @@
 import { createToken } from '../src/resources/oauth';
-import { getAsset } from '../src/resources/asset';
-import {
-  getBriefRequests,
-  getBriefRequestsRef,
-  modifyBriefRequestsBriefRequestItemsRef,
-  getBriefRequestsBriefRequestItemsRef,
-} from '../src/resources/briefRequests';
+import { getBriefRequests } from '../src/resources/briefRequests';
 import config from '../config';
 
 import { matchers } from 'jest-json-schema';
