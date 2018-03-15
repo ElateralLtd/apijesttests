@@ -102,11 +102,10 @@ describe('/briefRequests', () => {
       });
   });
 
-  test('Retrieve a brief request item by its reference.', () => {
+  test('Retrieve a brief request by its reference.', () => {
     const options = { token: Test.access_token };
-    options.ref = Test.briefRequestItemRef;
-    options.briefRequest = Test.briefRequestRef;
-    return getBriefRequestsBriefRequestItemsRef(options)
+    options.ref = Test.briefRequestRef;
+    return getBriefRequestsRef(options)
       .then(response => {
         expect(response).toEqual(expect.anything());
         expect(response.statusCode).toBe(200);
