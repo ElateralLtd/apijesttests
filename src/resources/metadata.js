@@ -14,7 +14,7 @@ export function createMetadata(options) {
   const headers = buildAuthHeader(options.token);
   REQUEST.uri = '/metadata';
   return postRequest(
-    { ...REQUEST, headers, body: options.options })
+    { ...REQUEST, headers, body: options.body })
     .then(response => response);
 }
 
