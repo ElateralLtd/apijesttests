@@ -40,6 +40,21 @@ describe('/addresses', () => {
       });
   });
 
+  test('Get all addresses', () => {
+    const options = { token: Test.access_token };
+    return getAddresses(options)
+      .then(response => {
+        expect(response).toEqual(expect.anything());
+        expect(response.statusCode).toBe(200);
+        expect(response.body.count).toEqual(expect.anything());
+        expect(response.body.count).toBeGreaterThan(0);
+        Test.newlyCreatedAddress = response.body.results.filter(address => {
+          return address.title === Test.address.title;
+        })[0];
+        expect(Test.newlyCreatedAddress).toEqual(expect.anything());
+      });
+  });
+
   test('Get address by Ref', () => {
     const options = { token: Test.access_token };
     options.ref = Test.address.ref;
