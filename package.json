@@ -34,7 +34,7 @@
   "jest": {
     "verbose": true,
     "testMatch": [
-      "<rootDir>/tests/*.js"
+      "<rootDir>/tests/*.tests.js"
     ],
     "collectCoverage": true,
     "collectCoverageFrom": [
