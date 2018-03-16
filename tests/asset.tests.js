@@ -93,7 +93,7 @@ describe('/assets', () => {
       });
   });
 
-  test('Create asset for initiative by ref', () => {
+  test('Create an asset', () => {
     const options = { token: Test.access_token };
     options.body = assetPayLoad.assetOrphan(
       Test.asset.name,
