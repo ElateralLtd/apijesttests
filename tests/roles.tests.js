@@ -30,6 +30,7 @@ describe('/roles', () => {
       })
       .then(response => {
         Test.postResponseSchema = response.body.paths['/roles'].post.responses['201'].schema;
+        Test.putResponseSchema = response.body.paths['/roles/{ref}'].put.responses['200'].schema;
       });
   }, config.jesBeforeAllTimeout);
 
@@ -82,6 +83,7 @@ describe('/roles', () => {
         expect(response).toEqual(expect.anything());
         expect(response.statusCode).toBe(200);
         expect(response.body.ref).toEqual(Test.newRoleRef);
+        expect(response.body).toMatchSchema(Test.putResponseSchema);
       });
   });
 
