@@ -48,7 +48,7 @@
       "lcov",
       "text"
     ],
-    "testResultsProcessor": "jest-allure-reporter"
+    "testResultsProcessor": "./teamcity-and-allure-reporter.js"
   },
   "jest-html-reporter": {
     "pageTitle": "API Regression Tests by Jest for Elateral.IO (PAT) Product's API",
