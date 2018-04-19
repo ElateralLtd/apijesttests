@@ -1,9 +1,9 @@
 import request from 'request';
 const config = require('../config.json');
-export const API_BASE_URL = config.apiFQDN;
+export const API_BASE_URL = process.env.apiFQDN || config.apiFQDN;
 export const API_URL = `https://${API_BASE_URL}/v1`;
-export const WEB_BASE_URL = config.webAppFQDN;
-export const ACCOUNTS_BASE_URL = config.accountFQDN;
+export const WEB_BASE_URL = process.env.webAppFQDN || config.webAppFQDN;
+export const ACCOUNTS_BASE_URL = process.env.accountFQDN || config.accountFQDN;
 const fs = require('fs');
 
 const winston = require('winston');
